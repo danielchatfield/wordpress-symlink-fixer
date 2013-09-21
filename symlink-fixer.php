@@ -8,15 +8,22 @@
  * Version 0.0.0
  */
 
+
+
 # Create a map of dirname( $plugin ) -> dirname( realpath( $plugin ) )
-global $plugin_dir_map;// I Know, another shitty global
-$plugin_dir_map = array();
+global $dc_plugin_dir_map;// I Know, another shitty global
+$dc_plugin_dir_map = array();
 
-foreach (wp_get_active_and_valid_plugins() as $plugin) {
-    $plugin_dir_map[dirname(realpath($plugin))] = dirname($plugin);
+foreach (wp_get_active_and_valid_plugins() as $tmp) {
+    $fake = dc_path_fixer(dirname($tmp));
+    $real = dc_path_fixer(dirname(realpath($tmp)));
+    if ($fake !== $real) {
+        $dc_plugin_dir_map[$fake] = $real;
+    }
 }
+unset($tmp);
 
-add_filter('plugins_url', 'dc_plugins_url', 10, 3);
+add_filter('plugins_url', 'dc_plugins_url', 0, 3);
 
 function dc_plugins_url($url, $path, $plugin) {
     if (empty($plugin) || !is_string($plugin)) {
@@ -46,11 +53,12 @@ function dc_plugins_url($url, $path, $plugin) {
 }
 
 function dc_plugins_file_fixer($plugin) {
-    foreach ($plugin_dir_map as $broken => $fixed) {
-        $plugin = preg_replace('#^' . preg_quote( $broken, '#') . '/#', $fixed, $plugin);
+    global $dc_plugin_dir_map;
+    foreach ($dc_plugin_dir_map as $fake => $real) {
+        $plugin = preg_replace('#^' . preg_quote( $real, '#') . '#', $fake, $plugin);
     }
 
-    return $path;
+    return $plugin;
 }
 
 function dc_path_fixer($path) {
