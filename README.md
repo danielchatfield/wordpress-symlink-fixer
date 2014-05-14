@@ -1,5 +1,7 @@
 # WordPress symlink fixer
 
+This plugin is now obsolete as WordPress now has this patch builtin.
+
 ## The problem
 
 Symlinks are a great way to be able to test a WordPress plugin against multiple 
