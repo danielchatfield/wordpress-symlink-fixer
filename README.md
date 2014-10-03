@@ -1,6 +1,6 @@
 # WordPress symlink fixer
 
-This plugin is now obsolete as WordPress now has this patch builtin.
+# DEPRECATED: This plugin is now obsolete as WordPress core has incorporated this patch.
 
 ## The problem
 
